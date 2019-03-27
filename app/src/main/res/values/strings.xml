@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">吃瓜天气</string>
+    <string name="search_Tips">请输入城市名称</string>
+    <string name="search_Btn">搜索</string>
+    <string name="air">空气质量：</string>
+    <string name="aqi">AQI指数</string>
+    <string name="pm25">PM2.5指数</string>
+    <string name="ChooseCity_title">热门城市列表</string>
+    <string name="life">生活建议</string>
+</resources>
