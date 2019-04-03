@@ -13,8 +13,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SharedPreferences pre= PreferenceManager.getDefaultSharedPreferences(this);
-        if (pre.getString("cityName",null)!=null){
+        String cityName = pre.getString("cityName",null);
+        if (cityName!=null){
             Intent intent=new Intent(this,WeatherActivity.class);
+            intent.putExtra("cityNameFromIntent",cityName);
             startActivity(intent);
             finish();
         }
