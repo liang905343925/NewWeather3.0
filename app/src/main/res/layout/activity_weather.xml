@@ -1,11 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WeatherActivity">
-    <include layout="@layout/weather_collection"/>
+    tools:context=".WeatherActivity"
+    android:background="#8000">
 
+    <ImageView
+        android:id="@+id/bing_pic_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
+<android.support.v4.widget.DrawerLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/drawer_layout">
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/swipe_refresh_weather">
+
+       <ScrollView
+           android:id="@+id/weather_layout"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:scrollbars="none"
+           android:overScrollMode="never">
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:orientation="vertical"
+               android:fitsSystemWindows="true">
+
+               <include layout="@layout/weather_city_title"/>
+               <include layout="@layout/now"/>
+               <include layout="@layout/weather_info"/>
+               <TextView
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:id="@+id/txt_show_weatherForecast_tips"
+                 android:textSize="20sp"
+                 android:layout_marginLeft="15dp"
+                 android:layout_marginTop="15dp"
+                 android:textColor="#fff"
+                 />
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="15dp"
+              android:orientation="vertical"
+              android:background="#8000">
+
+              <TextView
+                  android:layout_marginLeft="15dp"
+                  android:layout_marginTop="15dp"
+                  android:text="@string/forecast"
+                  android:textSize="20sp"
+                  android:textColor="#fff"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content" />
+
+              <android.support.v7.widget.RecyclerView
+              android:id="@+id/forecast_recyclerView"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="15dp">
+              </android.support.v7.widget.RecyclerView>
+
+          </LinearLayout>
+
+                <include layout="@layout/weather_suggestion"/>
+
+           </LinearLayout>
+       </ScrollView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/city_choose_fragment"
+        android:layout_gravity="start"
+        android:name="com.example.newweather.ChooseCityFragment"/>
+
+    </android.support.v4.widget.DrawerLayout>
 </FrameLayout>

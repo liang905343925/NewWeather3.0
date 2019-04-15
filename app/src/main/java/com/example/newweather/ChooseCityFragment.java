@@ -1,5 +1,7 @@
 package com.example.newweather;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -42,16 +44,26 @@ public class ChooseCityFragment extends Fragment {
     private List<String> dataList=new ArrayList<>();
     private View view;
     private Button btn_Search_city;
+    private ProgressDialog progressDialog;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        address="https://search.heweather.com/top?group=cn&" +
+                "key=0c96c2de712b4ceeab7c1f6df0bd4315&number=50";
+        LitePal.getDatabase();
+        getCity(address);
+        List<HotCity> hotCityList = DataSupport.findAll(HotCity.class);
+        for(int i = 0; i<hotCityList.size();i++){
+            dataList.add( hotCityList.get(i).getCityName());
+            Log.d("HotCity",hotCityList.get(i).getCityName());
+        }
         view=inflater.inflate(R.layout.city_choose,container,false);
         listView=view.findViewById(R.id.list_view);
+        adapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1,dataList);
+        listView.setAdapter(adapter);
         btn_Search_city =view.findViewById(R.id.Search_city);
-        LitePal.getDatabase();
-
         btn_Search_city.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,29 +71,7 @@ public class ChooseCityFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        return view;
-    }
 
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        address="https://search.heweather.com/top?group=cn&" +
-                "key=0c96c2de712b4ceeab7c1f6df0bd4315&number=50";
-        getCity(address);
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                List<HotCity> hotCityList = DataSupport.findAll(HotCity.class);
-                for(int i = 0; i<hotCityList.size();i++){
-                    dataList.add( hotCityList.get(i).getCityName());
-                    Log.d("HotCity",hotCityList.get(i).getCityName());
-                }
-                adapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1,dataList);
-                listView.setAdapter(adapter);
-
-            }
-        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -103,8 +93,7 @@ public class ChooseCityFragment extends Fragment {
                     WeatherActivity activity=(WeatherActivity)getActivity();
                     activity.drawerLayout.closeDrawers();
                     activity.requestWeatherInfo(city_name);
-                    activity.requestAQIInfo(city_name);
-                    activity.requestBingImg();
+                    activity.getBingPic();
 
                 }
 
@@ -113,7 +102,9 @@ public class ChooseCityFragment extends Fragment {
 
 
 
+        return view;
     }
+
 
 
 
@@ -121,6 +112,7 @@ public class ChooseCityFragment extends Fragment {
      * 连接服务器获取数据
      * */
     private void getCity(String address){
+        showProgerssDialog();
 
         HttpUtil.sendOkHttpRequest(address, new Callback() {
             @Override
@@ -129,6 +121,7 @@ public class ChooseCityFragment extends Fragment {
                     @Override
                     public void run() {
                         Toast.makeText(getContext(),"加载失败",Toast.LENGTH_SHORT).show();
+                        closeProgressDialog();
                     }
                 });
 
@@ -169,6 +162,25 @@ public class ChooseCityFragment extends Fragment {
 
             }
         });
+
+        closeProgressDialog();
+
+    }
+
+    public void showProgerssDialog(){
+        if (progressDialog==null){
+            progressDialog=new ProgressDialog(getActivity());
+            progressDialog.setMessage("正在加载中....");
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        progressDialog.show();
+
+    }
+
+    public void closeProgressDialog(){
+        if (progressDialog!=null){
+            progressDialog.dismiss();
+        }
 
     }
 

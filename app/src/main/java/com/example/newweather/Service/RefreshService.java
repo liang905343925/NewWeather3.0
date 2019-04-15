@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.Toast;
 
 
 import com.example.newweather.Util.HttpUtil;
@@ -34,7 +36,6 @@ public class RefreshService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         updateWeather();
-        updateAQI();
         updateBingPic();
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         int anHour = 60*60*1000;
@@ -43,6 +44,7 @@ public class RefreshService extends Service {
         PendingIntent pi = PendingIntent.getService(this,0,i,0);
         manager.cancel(pi);
         manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,triggerAtTime,pi);
+        Log.d("Service:","启动更新服务");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -78,34 +80,6 @@ public class RefreshService extends Service {
     }
 
 
-    public void updateAQI(){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String cityName = preferences.getString("cityName",null);
-        if (cityName != null){
-            String AQIUrl = "https://free-api.heweather.com/s6/air/now?location=" + cityName +
-                    "&key=0c96c2de712b4ceeab7c1f6df0bd4315";
-            HttpUtil.sendOkHttpRequest(AQIUrl, new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    String responseText = response.body().string();
-                    Weather weather = Utility.handleWeatherResponse(responseText);
-                    if (weather !=null && "ok".equals(weather.status)){
-                        SharedPreferences.Editor editor = PreferenceManager.
-                                getDefaultSharedPreferences(RefreshService.this).edit();
-                        editor.putString("AQI",responseText);
-                        editor.apply();
-                    }
-
-                }
-            });
-
-        }
-    }
 
 
     public  void updateBingPic(){

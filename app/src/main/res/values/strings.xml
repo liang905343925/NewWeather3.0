@@ -2,9 +2,13 @@
     <string name="app_name">吃瓜天气</string>
     <string name="search_Tips">请输入城市名称</string>
     <string name="search_Btn">搜索</string>
-    <string name="air">空气质量：</string>
-    <string name="aqi">AQI指数</string>
-    <string name="pm25">PM2.5指数</string>
+
     <string name="ChooseCity_title">热门城市列表</string>
-    <string name="life">生活建议</string>
+    <string name="life">生活建议：</string>
+   <string name="now_weather">天气实况：</string>
+    <string name="now_weather_humTips">相对湿度：</string>
+    <string name="now_weather_pcpnTps">降水概率：</string>
+    <string name="now_weather_pres">大气压强：</string>
+    <string name="now_weather_wind_sc">风力：</string>
+    <string name="forecast">7天预报：</string>
 </resources>
